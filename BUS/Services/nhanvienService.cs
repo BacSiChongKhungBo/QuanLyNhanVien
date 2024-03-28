@@ -19,9 +19,12 @@ namespace BUS.Services
         //-------------------------------------
         //trong này thực hiện thêm sửa xóa select
         //select
-        public List<NhanVien> GetNhanViens()
+        public List<NhanVien> GetNhanViens(string search)
         {
-            return repos.GetAll();
+            if(search == null || search == string.Empty)
+                return repos.GetAll();
+            else
+                return repos.GetAll().Where(x => x.MaNv.Contains(search) || x.HoTen.Contains(search)).ToList();
         }
 
         //thêm
@@ -39,15 +42,7 @@ namespace BUS.Services
         //Sửa :hơi nguy hiểm, dễ sai
         public string SuaNhanVien(NhanVien nv)
         {
-            //tạo 1 clone y hệt đối tượng đầu vào
-            NhanVien clone = new NhanVien();
-            //gán toàn bộ giá trị của nv vào clone
-            clone.MaNv = nv.MaNv;
-            clone.HoTen = nv.HoTen;
-            clone.NgaySinh = nv.NgaySinh;
-            clone.Diachi = nv.Diachi;
-            clone.GioiTinh = nv.GioiTinh;
-            if (repos.UpdateObj(clone))
+            if (repos.UpdateObj(nv))
             {
                 return "Sửa thành công";
             }
